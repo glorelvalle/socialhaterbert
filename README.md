@@ -1,16 +1,57 @@
 # SocialHaterBert: a dichotomous approach for automatically detecting hate speech on Twitter through textual analysis and user profiles.
 
-*This work is in progress*
+<p align="center">
+<i>This work is in progress.</i>
+</p>
 <p align="center">
   <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f5c5db84-e059-44cb-b51c-660bdb713462/BERT.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211203%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211203T150958Z&X-Amz-Expires=86400&X-Amz-Signature=96af190f6e8eaf6297de147547130dd9ca275c58245bff25aca7883b46f36e1f&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22BERT.png%22&x-id=GetObject" alt="drawing" width="400"/>
 </p>
 
 This project comprises both an in-depth study of the efforts and techniques used so far for the detection and prevention of hateful content and cyberbullying on the popular social network Twitter, as well as a proposal for a novel approach for feature analysis based on user profiles, related social environment and generated tweets. It has been found that the contribution of user characteristics plays a significant part on gaining a deeper understanding of hate virality in the network, so that this work has allowed to open the field of study and break the textual boundaries giving rise to future research in combined models from a diachronic and dynamic perspective.
 
+<p align="center">
+👀 <a href="https://www.notion.so/giogia/SocialHaterBERT-Project-9d93e0e5ed4a468fb09b42a50d9a3dd9">SocialProject webpage</a>
+</p>
+
+In an already polarized world, social networks are a double-edged sword with
+the appearance of phenomena such as hate speech. In the present work, its presence
+on Twitter has been detected and analyzed. For this, a base algorithm,
+HaterBERT, has been designed, which improves current Spanish classifiers’ results
+by 3%-27%.
+
+Furthermore, the presence of hate speech on Twitter has been analyzed
+through an extensive study that has served to extrapolate essential characteristics
+of it. To do this, a procedure has been developed for the extraction
+and manipulation of these characteristics, SocialGraph, which has been demonstrated
+with an F1 of 99 % and a Random Forest classifier that provides valuable
+data for the identification of hater profiles.
+
+These findings lead to the development of SocialHaterBERT, a novel multimodal
+model that combines categorical and numerical variables from the social
+network with text input from tweets, providing not only a new way to understand
+hate speech on social media in general but also demonstrating how the
+context of social media improves textual classification, which is the most valuable
+contribution of this paper. In particular, we achieved a 4% improvement
+over the HaterBERT’s base algorithm and a 19% improvement over our original
+algorithm, HaterNet (Pereira-Kohatsu et al., 2019).
+Future research should look into aspects such as a review of hate’s history
+and evolution on the network, trends, public and anonymous users affected
+by it, and aggressors’ profiles, with the goal of encouraging the discovery of
+relationships with the dissemination and virality of hate on social networks.
+
+Following that, interactions with one another might be investigated, resulting
+in an extension of SocialGraph’s characteristics and a prediction of each tweet’s
+virality.
+
 _____________________________________________ 💻 _______________________________________________
 
-## Methodology and Design
+
+## Brief Methodology and Design
 This section introduces the design of the three approaches created for hate speech on Twitter.
+
+<p align="center">
+  <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/98d79e8b-cedf-409d-91a4-f8bb28e4ec98/Captura_de_pantalla_2021-12-03_a_las_17.54.22.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211203%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211203T165505Z&X-Amz-Expires=86400&X-Amz-Signature=987dafd37fd01e5a12eddc551610c989b5f61081d86beef4a6736fa9dd30ec0d&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Captura%2520de%2520pantalla%25202021-12-03%2520a%2520las%252017.54.22.png%22&x-id=GetObject" alt="drawing" width="600"/>
+</p>
 
 ### [HaterBERT](src/HaterBERT)
 
@@ -168,5 +209,90 @@ places, top 5 of most retweeted users, etc.).
 To be part of the input of any model we must transform the set of characteristics into a set of attributes. Each of the characteristics’ tables indicates the type of variable associated with each characteristic, these
 can be grouped into.
 
-*(To be continued...)*
+<div id="tab:finalatributes">
+
+| **Variable**     | **Original Variable(s)**          | **Group** | **Method**                                | **Categories**                                                                                                                                             | **Description**                                                  |
+| :--------------- | :-------------------------------- | :-------- | :---------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
+| verified         | NC                                | profile   | boolean classification                    | 0: No, 1: Yes                                                                                                                                              | user is verified                                                 |
+| hater            | NC                                | activity  | boolean classification                    | 0: No, 1: Yes                                                                                                                                              | user has more than 5% hate tweets                                |
+| vecino\_hater    | NC                                | activity  | boolean classification                    | 0: No, 1: Yes                                                                                                                                              | the user has at least one neighbor with more than 5% hate tweets |
+| profile\_changed | default\_profile                  | profile   | boolean classification                    | 0: No, 1: Yes                                                                                                                                              | the user ever updated his profile                                |
+| clase\_NER       | screen\_name + uname              | profile   | NER tag search (Spacy)                    | 0: PER, 1: MISC, 2: ORG, 3: UND                                                                                                                            | tipo de nombre                                                   |
+| clase\_DESCR     | description                       | profile   | cleaning (NLTK) + Topic Modeling (Gensim) | 0: opinion, 1: studies, 2: politics, 3: activities                                                                                                         | description type                                                 |
+| clase\_LOC       | location                          | profile   | cleaning + ad hoc dict + pycountry        | 0-19: geographic world areas or provinces in the case of Spain                                                                                             | geographical area enabled by the user                            |
+| clase\_FECHA     | created\_at                       | profile   | division into three regions               | 0: \< 2015, 1: \[2015-2019\], 2: \> 2019                                                                                                                   | time of user creation                                            |
+| clase\_IMG       | categories \_profile\_image \_url | profile   | Topic Modeling (Gensim)                   | 0: people, 1: clothing, 2: building, 3: animal, 4: nature, 5: technology, 6: sports, 7: objects, 8: food                                                   | profile image type                                               |
+| clase\_HASHTAGS  | top\_hashtags                     | activity  | Correlation matrix + Topic Modeling       | 0: politics, 1: press, 2: sports, 3: others                                                                                                                | hashtag type                                                     |
+| clase\_CATS      | top\_categories                   | activity  | Topic Modeling (Gensim)                   | 0: Spain, 1: culture, 2: art, 3: society 4: cartoons, 5: Catalonia, 6: graphical arts, 7: drawings, 8: opinion, 9: illustrations, 10: politics, 11: others | most repeated categories by the user in tweets                   |
+| clase\_DOMS      | top\_referenced \_domains         | activity  | wikipedia + Topic Modeling                | 0: social networks, 1: information, communication and news, 2: entertainment                                                                               | type of domain most shared by the user                           |
+| clase\_RTSCAT    | top\_retweeted \_users            | activity  | Topic Modeling (Gensim)                   | 0: Spain, 1: culture, 2: art, 3: society 4: cartoons, 5: Catalonia, 6: graphical arts, 7: drawings, 8: opinion, 9: illustrations, 10: politics, 11: others | most retweeted user type                                         |
+| clase\_MENCAT    | top\_mentioned \_users            | activity  | Topic Modeling (Gensim)                   | 0: Spain, 1: culture, 2: art, 3: society 4: cartoons, 5: Catalonia, 6: graphical arts, 7: drawings, 8: opinion, 9: illustrations, 10: politics, 11: others | most mentioned user type                                         |
+|                  |                                   |           |                                           |                                                                                                                                                            |                                                                  |
+
+Detail of the categorical variables in SocialGraph NC = does not change.
+  
+</div>
+  
+  
+<div id="tab:finalatributes2">
+
+| **Variable**                                          | **Original Variable(s)** | **Group**  | **Method**      | **Description**                                                     |
+| :---------------------------------------------------- | :----------------------- | :--------- | :-------------- | :------------------------------------------------------------------ |
+| n\_LESP                                               | top\_languages           | activity   | Ad hoc function | percentage of hate tweets in Spanish                                |
+| n\_LENG                                               | top\_languages           | activity   | Ad hoc function | percentage of hate tweets in English                                |
+| n\_LOTR                                               | top\_languages           | activity   | Ad hoc function | percentage of hate tweets in other language (no Spanish or English) |
+| <span style="color: red">activity\_hourly\_`X`</span> | NC                       | activity   | Ad hoc function | percentage of tweets per hour (X=24)                                |
+| <span style="color: red">activity\_weekly\_`X`</span> | NC                       | activity   | Ad hoc function | percentage of tweets per week day (X=7)                             |
+| negatives                                             | NC                       | activity   | Ad hoc function | negative connotation percentage of tweets                           |
+| positives                                             | NC                       | activity   | Ad hoc function | positive connotation percentage of tweets                           |
+| neutral                                               | NC                       | activity   | Ad hoc function | neutral connotation percentage of tweets                            |
+| n\_hate                                               | NC                       | activity   | Ad hoc function | hate tweets percentage                                              |
+| n\_nohate                                             | NC                       | activity   | Ad hoc function | non hate tweets percentage                                          |
+| n\_baddies                                            | NC                       | activity   | Ad hoc function | percentage of baddies per tweet                                     |
+| eigenvector                                           | NC                       | centrality | \-              | eigenvector score                                                   |
+| in\_degree                                            | NC                       | centrality | \-              | in degree score                                                     |
+| out\_degree                                           | NC                       | centrality | \-              | out degree score                                                    |
+| degree                                                | NC                       | centrality | \-              | degree score                                                        |
+| clustering                                            | NC                       | centrality | \-              | clustering score                                                    |
+| closeness                                             | NC                       | centrality | \-              | closeness score                                                     |
+| betweenness                                           | NC                       | centrality | StandardScaler  | number of shortest paths to it                                      |
+| status\_average\_tweets \_per\_day                    | NC                       | activity   | StandardScaler  | average number of times user tweets per day                         |
+| times\_user\_quotes                                   | NC                       | activity   | StandardScaler  | number of times user quotes others                                  |
+| negatives\_score                                      | NC                       | activity   | \-              | mean score of negative tweets                                       |
+| positives\_score                                      | NC                       | activity   | \-              | mean score of positive tweets                                       |
+| neutral\_score                                        | NC                       | activity   | \-              | mean score of neutral tweets                                        |
+| hate\_score                                           | NC                       | activity   | \-              | score media de tweets de odio                                       |
+| no\_hate\_score                                       | NC                       | activity   | \-              | score media de tweets de no odio                                    |
+| statuses\_count                                       | NC                       | activity   | StandardScaler  | total number of tweets                                              |
+| followers\_count                                      | NC                       | activity   | StandardScaler  | total number of tweets followers                                    |
+| followees\_count                                      | NC                       | activity   | StandardScaler  | total number of tweets followees                                    |
+| favorites\_count                                      | NC                       | activity   | StandardScaler  | total number of tweets favourites                                   |
+| listed\_count                                         | NC                       | activity   | StandardScaler  | number of lists user is on                                          |
+| num\_hashtags                                         | NC                       | activity   | StandardScaler  | number of hashtags used                                             |
+| rt\_count                                             | NC                       | activity   | StandardScaler  | total number of retweets                                            |
+| num\_mentions                                         | NC                       | activity   | StandardScaler  | number of mentions made                                             |
+| num\_urls                                             | NC                       | activity   | StandardScaler  | number of shared urls                                               |
+| len\_status                                           | NC                       | activity   | StandardScaler  | average tweet length                                                |
+| num\_rts\_to\_tweets                                  | NC                       | activity   | StandardScaler  | number of times user tweets are retweeted                           |
+| num\_favs\_to\_tweets                                 | NC                       | activity   | StandardScaler  | number of times user tweets are favourited                          |
+| misspelling\_counter                                  | NC                       | activity   | StandardScaler  | number of times user makes mistakes or errors                       |
+| leet\_counter                                         | NC                       | activity   | StandardScaler  | number of times user uses leet alphabet                             |
+|                                                       |                          |            |                 |                                                                     |
+
+Detail of the numerical variables in SocialGraph NC = does not change.
+
+</div>
+
+### [SocialHaterBERT](src/SocialHaterBERT)
+
+In order to improve on previous algorithms that only used the text of the tweet to be analyzed as input, SocialHaterBERT is created as a multimodal model that combines textual classifiers with social network characteristics. As a result, HaterBERT’s classifier after experimental optimization of its parameters and SocialGraph after an experimental attribute selection form the foundation of SocialHaterBERT.
+  
+For the construction of the model, we make use of the [Multimodal Transformers](https://multimodal-toolkit.readthedocs.io/en/latest/) library, which is used to incorporate multimodal data on text data for classification and regression tasks. In this way, a pre-trained transformer along the combination module’s parameters and the transformer are trained as a supervised task.
+
+<p align="center">
+  <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6be925f5-0a0b-403b-b891-5530c7b9d414/detallemultimodal2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20211203%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20211203T164200Z&X-Amz-Expires=86400&X-Amz-Signature=b7748caa42720eacced9b5586bb9360bf369a5a20f78659779c73944e681a917&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22detallemultimodal2.png%22&x-id=GetObject" alt="drawing" width="600"/>
+</p>
+  
+SocialHaterBERT’s architecture is as follows: to distribute the data for classification, the text, numeric, categorical and prediction columns are specified in a dictionary. After this, *BertTokenizer* and *BertForSequenceClassification* are instantiated respectively, which also allows the Fine-Tuning of it. Then, in the Combining Module (shown in figure above) a hidden two-layer MLP is created with a ReLu activation function, as it improves training. Finally, before the output layer results are combined using the logical sum of the attributes, as it proved to be the best combination option.
+  
 _____________________________________________ 💻 _______________________________________________
