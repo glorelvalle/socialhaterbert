@@ -1,4 +1,4 @@
-# SocialHaterBert: Detecting hate messages on Twitter: a study based on profiles within the social network.
+# SocialHaterBert: a dichotomous approach for automatically detecting hate speech on Twitter through textual analysis and user profiles.
 
 *This work is in progress*
 
