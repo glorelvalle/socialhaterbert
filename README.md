@@ -4,7 +4,7 @@
 <i>This work is in progress.</i>
 </p>
 <p align="center">
-  <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f5c5db84-e059-44cb-b51c-660bdb713462/BERT.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220202%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220202T212120Z&X-Amz-Expires=86400&X-Amz-Signature=00063d620e5bb154ae9c254fc154ddfc84637238e952bcf26b5bce26a2e90d3f&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22BERT.png%22&x-id=GetObject" alt="drawing" width="400"/>
+  <img src="img/project.png" alt="drawing" width="400"/>
 </p>
 
 This project comprises both an in-depth study of the efforts and techniques used so far for the detection and prevention of hateful content and cyberbullying on the popular social network Twitter, as well as a proposal for a novel approach for feature analysis based on user profiles, related social environment and generated tweets. It has been found that the contribution of user characteristics plays a significant part on gaining a deeper understanding of hate virality in the network, so that this work has allowed to open the field of study and break the textual boundaries giving rise to future research in combined models from a diachronic and dynamic perspective.
@@ -54,7 +54,7 @@ _____________________________________________ 💻 _____________________________
 This section introduces the design of the three approaches created for hate speech on Twitter.
 
 <p align="center">
-  <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/98d79e8b-cedf-409d-91a4-f8bb28e4ec98/Captura_de_pantalla_2021-12-03_a_las_17.54.22.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220202%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220202T212307Z&X-Amz-Expires=86400&X-Amz-Signature=bf96b649215b39912200b2cb5b811e8c2bd10b3c34f47c11f61c5dce4fad9c8c&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Captura%2520de%2520pantalla%25202021-12-03%2520a%2520las%252017.54.22.png%22&x-id=GetObject" alt="drawing" width="600"/>
+  <img src="img/complete.png" alt="drawing" width="600"/>
 </p>
 
 ### [HaterBERT](src/HaterBERT)
@@ -294,7 +294,7 @@ In order to improve on previous algorithms that only used the text of the tweet 
 For the construction of the model, we make use of the [Multimodal Transformers](https://multimodal-toolkit.readthedocs.io/en/latest/) library, which is used to incorporate multimodal data on text data for classification and regression tasks. In this way, a pre-trained transformer along the combination module’s parameters and the transformer are trained as a supervised task.
 
 <p align="center">
-  <img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6be925f5-0a0b-403b-b891-5530c7b9d414/detallemultimodal2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220202%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220202T212347Z&X-Amz-Expires=86400&X-Amz-Signature=fcb9704e4ebe81a27d011b8e408bf060f836452d6a953c61b3dc64474d8340cf&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22detallemultimodal2.png%22&x-id=GetObject" alt="drawing" width="600"/>
+  <img src="img/multimodal.png" alt="drawing" width="600"/>
 </p>
   
 SocialHaterBERT’s architecture is as follows: to distribute the data for classification, the text, numeric, categorical and prediction columns are specified in a dictionary. After this, *BertTokenizer* and *BertForSequenceClassification* are instantiated respectively, which also allows the Fine-Tuning of it. Then, in the Combining Module (shown in figure above) a hidden two-layer MLP is created with a ReLu activation function, as it improves training. Finally, before the output layer results are combined using the logical sum of the attributes, as it proved to be the best combination option.
